@@ -1,23 +1,33 @@
 #!/usr/bin/env ruby -Ku
 # Usage: cat problems | program.rb
-
+require "date"
 class Solver
 	def solve line
 		items = line.split " "
 		@min = items.shift.to_i
 		@max = items.shift.to_i
 		@digits = @min.to_s.length
+		@pows = []
+		for t in 0..(@digits+2)
+			@pows[t] = 10**t
+		end
+
 		i = @min
 		o=[]
 		result = 0
+
 		while i <= @max
-			t = i % (10 ** @digits) / (10 ** (@digits - 1))
-			#print t,"-",(10**(@digits)),":"
+			#	if i % 10000 == 0
+			#		print ">>",DateTime.now,": ",i,"\n"
+			#	end
+			t = i % pow(@digits) / pow(@digits-1)
+			#t = i % (10 ** @digits) / (10 ** (@digits - 1))
 			begin
 				d=0
 				valid=true
 				while d < @digits
-					fig = 10**d
+					fig = pow d
+					#fig = 10**d
 					n = (i % (fig * 10)) / fig
 					if n != 0 && n < t
 						#print "aa",i,":",n,"<",t,"\n"
@@ -29,7 +39,7 @@ class Solver
 				if !valid
 					next
 				end
-				result += shiftCount i
+				result += shiftCount i,i
 			ensure	
 				i+=1
 			end
@@ -44,16 +54,15 @@ class Solver
 			return 0 
 		end
 		#print "["
-		#if i == istart
-		#	return 0
+		#if i == nil
+		#	i = istart
 		#end
-		if i == nil
-			i = istart
-		end
 		# shift
 		count=0
-		d = 10 ** (depth + 1)
-		i2 = (i % d) * (10 ** (@digits-1-depth)) + (i / d)
+		d = pow(depth + 1)
+		#d = 10 ** (depth + 1)
+		i2 = (i % d) * pow(@digits-1-depth) + (i / d)
+		#i2 = (i % d) * (10 ** (@digits-1-depth)) + (i / d)
 		#print i,",",i2,"(n=",n,",r=",results.length,",d=",depth,")"
 		if @min <= i && i<i2 && @min <= i2 && i2 <= @max && buf[i.to_s+"-"+i2.to_s]==nil
 			buf[i.to_s+"-"+i2.to_s] = 0
@@ -62,17 +71,21 @@ class Solver
 	#		print "!"
 		end
 	#		print "\n"
-		n2 = n + 1
 		d2 = 0
+		n2=n+1
 		#print "w"
-		while n + d2 < @digits 
+		while n + d2 < @digits - 1
 			#print "."
 			#print i,",",i2,"n=",n,":depth=",depth,"/d2=",d2,"\n"
 			d2+=1
-			count += shiftCount istart,i, n+1, d2,buf
+			count += shiftCount istart,i, n2, d2,buf
 		end
 			#print ";\n"
 		return count #+(shiftCount istart,i2,n2)
+	end
+
+	def pow (n)
+		return @pows[n]
 	end
 end
 
