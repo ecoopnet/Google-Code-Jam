@@ -6,7 +6,7 @@ class Solver
 		items = line.split(" ")
 		@L = items.shift.to_i
 		@M = items.shift.to_i
-		@exp = items.sort.reverse
+		@exp = items.sort #.reverse
 		@exp.delete("0")
 		if @exp.length == 0
 			return 0
@@ -16,7 +16,7 @@ class Solver
 				return -1;
 			end
 		end
-		min = @exp.pop.to_i
+		max = @exp.pop.to_i
 		if @L == 0
 			return 0
 		end
@@ -30,9 +30,7 @@ class Solver
 #			end
 		end
 		#print min,"\n"
-		if (min > 0)
-			res+=min
-		end
+		res+=max
 		return res;
 	end
 end
