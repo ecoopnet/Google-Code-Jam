@@ -2,11 +2,6 @@
 # Usage: cat problems | program.rb
 
 class Solver
-	def initialize
-		@MIRROR = "#"
-		@FLOOR = "."
-		@ME = "X"
-	end
 	def solve lines
 		line = lines.shift
 		items = line.split(" ")
