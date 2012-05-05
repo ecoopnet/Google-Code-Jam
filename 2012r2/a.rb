@@ -12,15 +12,48 @@ class Solver
 			@list.push i.to_i
 		end
 		min = sum.to_f * 2 / @N
+		@sublist = @list.clone
+		tmin = min
+		while true
+			@sublist.delete_if { |i|
+				t = (tmin - i) * 100 / sum
+				t < 0
+			}
+			#recalculate
+			subsum = 0
+			@sublist.each do |i|
+				subsum+=i
+			end
+			submin = (sum + subsum.to_f) / @sublist.length
+			tmin = submin
+			needRetry = false
+			@sublist.each do |i|
+				t2 = (submin - i) * 100 / sum
+				if t2<0
+					needRetry = true
+					break
+				end
+			end
+			if needRetry
+				next
+			else
+				break
+			end
+		end
+		#print "sum=",sum, ", subsum=", subsum , ",min=",min, ", submin=", submin,"\n"
 		res = []
-		minItem = @list.sort.shift
 		@list.each do |i|
-			print "i=", i, ",min=", min, " sum=",sum,"\n"
+			#print "i=", i, ",min=", min, " sum=",sum,"\n"
 			t = (min - i) * 100 / sum
 			if t < 0
-				res.push sprintf("%d", 0)
+				#res.push sprintf("%d", 0)
+				res.push sprintf("%#.09f", 0)
 			else
-				res.push sprintf("%#.06f", t)
+				t2 = (submin - i) * 100 / sum
+				if t2 < 0
+					t2 = 0
+				end
+				res.push sprintf("%#.09f", t2)
 			end
 		end
 		#p @list, sum, min
