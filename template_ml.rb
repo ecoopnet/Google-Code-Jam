@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -Ku
 # Usage: cat problems | program.rb
+require "pp"
 
 class Solver
 	def solve lines
